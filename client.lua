@@ -126,7 +126,7 @@ function GodsEyes()
 
     if not input then return end
 
-    if targetId == cache.serverId then -- check if the person is self.
+    if targetId == cache.playerId then -- check if the person is self.
         lib.notify({
             title = 'God\'s Eye',
             description = 'You cannot track yourself.',
@@ -179,7 +179,8 @@ end
 CreateThread(function()
     while true do
         for i, locations in pairs(GELocations) do
-            local distance = GetDistanceBetweenCoords(cache.coords.x, cache.coords.y, cache.coords.z, locations.x, locations.y, locations.z, true)
+            local coords2 = GetEntityCoords(cache.ped)
+            local distance = GetDistanceBetweenCoords(coords2.x, coords2.y, coords2.z, locations.x, locations.y, locations.z, true)
             if distance < 3 then -- draw the marker and allow the user to interact with God's Eye
                 DrawMarker(31, locations.x, locations.y, locations.z, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 1.0, 1.0, 0, 128, 0, 50, false, true, 2, false, nil, nil)
                 if IsControlPressed(0, 153) then
