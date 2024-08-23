@@ -126,7 +126,9 @@ function GodsEyes()
 
     if not input then return end
 
-    if targetId == cache.playerId then -- check if the person is self.
+    targetId = input[1]  -- Convert the target ID to a number
+
+    if targetId == cache.serverId then -- check if the person is self.
         lib.notify({
             title = 'God\'s Eye',
             description = 'You cannot track yourself.',
@@ -134,10 +136,9 @@ function GodsEyes()
             position = 'center-right',
             duration = 6000,
         })
+        targetId = nil
         return
     end
-
-    targetId = input[1]  -- Convert the target ID to a number
 
     if count ~= 0 then
         lib.notify({
