@@ -3,13 +3,9 @@ RegisterNetEvent('GodsEye:SentCoords')
 local foundPlayer = false
 local count = 0
 local count2 = 0
-
 local targetId
-
 local activeLocations = {}
-
 local blip = nil
-
 local coords
 local ped
 
