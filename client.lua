@@ -21,7 +21,8 @@ AddEventHandler('GodsEye:SentCoords', function(cd, pd)
             title = 'Player Not Found',
             description = 'The specified player could not be found',
             type = 'error',
-            position = 'center-right'
+            position = 'center-right',
+            duration = 6000,
         })
         GodsEye(true)
         foundPlayer = false
@@ -33,7 +34,8 @@ AddEventHandler('GodsEye:SentCoords', function(cd, pd)
             title = 'Player Not Found',
             description = 'The specified player could not be found',
             type = 'error',
-            position = 'center-right'
+            position = 'center-right',
+            duration = 6000,
         })
         return
     end
@@ -112,7 +114,8 @@ function GodsEyes()
             title = 'God\'s Eye Reset',
             description = 'Removed the blip, you are still on cooldown for ' .. 300 - count .. ' seconds',
             type = 'success',
-            position = 'center-right'
+            position = 'center-right',
+            duration = 6000,
         })
         return
     end
@@ -130,7 +133,8 @@ function GodsEyes()
             title = 'Active Cooldown',
             description = 'You are still on cooldown for ' .. 300 - count .. ' seconds',
             type = 'warning',
-            position = 'center-right'
+            position = 'center-right',
+            duration = 6000,
         })
         return
     end
@@ -140,7 +144,8 @@ function GodsEyes()
             title = 'Search In-Progress',
             description = 'Player search already in-progress',
             type = 'error',
-            position = 'center-right'
+            position = 'center-right',
+            duration = 6000,
         })
         return
     end
@@ -154,7 +159,8 @@ function GodsEyes()
             title = 'Located Player',
             description = 'We have successfully located player with ID: ' .. targetId .. ' God\'s Eye active for 5 minutes.',
             type = 'success',
-            position = 'center-right'
+            position = 'center-right',
+            duration = 6000,
         })
     end
 end
@@ -163,12 +169,13 @@ CreateThread(function()
     while true do
         for i, locations in pairs(GELocations) do
             local coords2 = GetEntityCoords(cache.ped)
-            if GetDistanceBetweenCoords(coords2.x, coords2.y, coords2.z, locations.x, locations.y, locations.z, true) < 3 then
+            local distance = GetDistanceBetweenCoords(coords2.x, coords2.y, coords2.z, locations.x, locations.y, locations.z, true)
+            if distance < 3 then -- draw the marker and allow the user to interact with God's Eye
                 DrawMarker(31, locations.x, locations.y, locations.z, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 1.0, 1.0, 0, 128, 0, 50, false, true, 2, false, nil, nil)
                 if IsControlPressed(0, 153) then
                     GodsEyes()
                 end
-            elseif GetDistanceBetweenCoords(coords2.x, coords2.y, coords2.z, locations.x, locations.y, locations.z, true) > 10 and foundPlayer then
+            elseif distance > 10 and foundPlayer then -- remove the blip if person is not near the marker.
                 GodsEye(true)
                 foundPlayer = false
                 count = 0
