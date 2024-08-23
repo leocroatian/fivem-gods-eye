@@ -12,19 +12,6 @@ local ped
 AddEventHandler('GodsEye:SentCoords', function(cd, pd)
     coords = cd
     ped = pd
-    if not coords and ped then
-        lib.notify({
-            title = 'Player Not Found',
-            description = 'The specified player could not be found',
-            type = 'error',
-            position = 'center-right',
-            duration = 6000,
-        })
-        GodsEye(true)
-        foundPlayer = false
-        count2 = 0
-        return
-    end
     if not ped then
         lib.notify({
             title = 'Player Not Found',
@@ -41,6 +28,23 @@ function GetInformation()
     TriggerServerEvent('GodsEye:GetCoords', targetId)
     Wait(1000)
 
+    if not coords then
+        lib.notify({
+            title = 'Player Not Found',
+            description = 'The specified player could not be found',
+            type = 'error',
+            position = 'center-right',
+            duration = 6000,
+        })
+        if activeLocations then
+            GodsEye(true)
+        end
+        foundPlayer = false
+        count = 0
+        count2 = 0
+        return
+    end
+
     local Location = {
         pos = {x = coords.x, y = coords.y, z = coords.z},
     }
@@ -49,8 +53,8 @@ function GetInformation()
 end
 
 function GodsEye(reset)
-    GetInformation()
     if reset == false then
+        GetInformation()
         for i, location in pairs(activeLocations) do
             blip = AddBlipForRadius(location.pos.x, location.pos.y, location.pos.z, 400.0)
             SetBlipColour(blip, 69)
@@ -175,10 +179,12 @@ end
 
 CreateThread(function()
     while true do
+        local sleep = 2000
         for i, locations in pairs(GELocations) do
             local coords2 = GetEntityCoords(cache.ped)
             local distance = GetDistanceBetweenCoords(coords2.x, coords2.y, coords2.z, locations.x, locations.y, locations.z, true)
             if distance < 3 then -- draw the marker and allow the user to interact with God's Eye
+                sleep = 0 
                 DrawMarker(31, locations.x, locations.y, locations.z, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 1.0, 1.0, 0, 128, 0, 50, false, true, 2, false, nil, nil)
                 if IsControlPressed(0, 153) then
                     GodsEyes()
@@ -190,7 +196,7 @@ CreateThread(function()
                 count2 = 0
             end
         end
-        Wait(0)
+        Wait(sleep)
     end
 end)
 
