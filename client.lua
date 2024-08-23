@@ -126,6 +126,17 @@ function GodsEyes()
 
     if not input then return end
 
+    if targetId == cache.playerId then
+        lib.notify({
+            title = 'God\'s Eye',
+            description = 'You cannot track yourself.',
+            type = 'error',
+            position = 'center-right',
+            duration = 6000,
+        })
+        return
+    end
+
     targetId = input[1]  -- Convert the target ID to a number
 
     if count ~= 0 then
