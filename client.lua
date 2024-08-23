@@ -9,26 +9,16 @@ local blip = nil
 local coords
 local ped
 
-AddEventHandler('GodsEye:SentCoords', function(cd, pd)
+AddEventHandler('GodsEye:SentCoords', function(cd, pd) -- server sided event when the coordinates get sent back to the client
     coords = cd
     ped = pd
-    if not ped then
-        lib.notify({
-            title = 'Player Not Found',
-            description = 'The specified player could not be found',
-            type = 'error',
-            position = 'center-right',
-            duration = 6000,
-        })
-        return
-    end
 end)
 
-function GetInformation()
+function GetInformation() -- getting the coordinates for the selected player
     TriggerServerEvent('GodsEye:GetCoords', targetId)
-    Wait(1000)
+    Wait(500)
 
-    if not coords then
+    if coords == nil then
         lib.notify({
             title = 'Player Not Found',
             description = 'The specified player could not be found',
@@ -36,9 +26,6 @@ function GetInformation()
             position = 'center-right',
             duration = 6000,
         })
-        if activeLocations then
-            GodsEye(true)
-        end
         foundPlayer = false
         count = 0
         count2 = 0
@@ -52,8 +39,8 @@ function GetInformation()
     table.insert(activeLocations, Location)
 end
 
-function GodsEye(reset)
-    if reset == false then
+function GodsEye(reset) -- drawing / removing the blip
+    if not reset then
         GetInformation()
         for i, location in pairs(activeLocations) do
             blip = AddBlipForRadius(location.pos.x, location.pos.y, location.pos.z, 400.0)
@@ -64,7 +51,7 @@ function GodsEye(reset)
             SetBlipAsShortRange(blip, true)
             foundPlayer = true
         end
-    else
+    elseif reset then
         for i, location in pairs(activeLocations) do
             RemoveBlip(blip)
             foundPlayer = false
@@ -73,7 +60,7 @@ function GodsEye(reset)
     end
 end
 
-CreateThread(function()
+CreateThread(function() -- checking the countdown/cooldown on the blip
     while true do
         while foundPlayer do
             Wait(1*1000)
@@ -106,7 +93,7 @@ CreateThread(function()
     end
 end)
 
-function GodsEyes()
+function GodsEyes() -- basic information for the script
     if foundPlayer then -- remove the blip for the player & leave the cooldown
         GodsEye(true)
         foundPlayer = false
@@ -177,7 +164,7 @@ function GodsEyes()
     end
 end
 
-CreateThread(function()
+CreateThread(function() -- markers thread
     while true do
         local sleep = 2000
         for i, locations in pairs(GELocations) do
