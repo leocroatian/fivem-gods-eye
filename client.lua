@@ -178,7 +178,7 @@ CreateThread(function() -- markers thread
                     icon = 'globe',
                     style = {
                         borderRadius = 1,
-                        backgroundColor = '#06402Bw',
+                        backgroundColor = '#06402B',
                         color = 'white'
                     }
                 })
