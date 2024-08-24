@@ -171,12 +171,28 @@ CreateThread(function() -- markers thread
             local coords2 = GetEntityCoords(cache.ped)
             local distance = GetDistanceBetweenCoords(coords2.x, coords2.y, coords2.z, locations.x, locations.y, locations.z, true)
             if distance < 3 then -- draw the marker and allow the user to interact with God's Eye
-                sleep = 0 
-                DrawMarker(31, locations.x, locations.y, locations.z, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 1.0, 1.0, 0, 128, 0, 50, false, true, 2, false, nil, nil)
+                sleep = 50
+                --DrawMarker(31, locations.x, locations.y, locations.z, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 1.0, 1.0, 0, 128, 0, 50, false, true, 2, false, nil, nil)
+                lib.showTextUI('[E] - Track Player', {
+                    posistion = "top-center",
+                    icon = 'globe',
+                    style = {
+                        borderRadius = 1,
+                        backgroundColor = '#06402B',
+                        color = 'white'
+                    }
+                })
                 if IsControlPressed(0, 153) then
                     GodsEyes()
                 end
-            elseif distance > 10 and foundPlayer then -- remove the blip if person is not near the marker.
+            end
+            if distance > 3 then
+                local isOpen = lib.isTextUIOpen()
+                if isOpen then
+                    lib.hideTextUI()
+                end
+            end
+            if distance > 10 and foundPlayer then -- remove the blip if person is not near the marker.
                 GodsEye(true)
                 foundPlayer = false
                 count = 0
