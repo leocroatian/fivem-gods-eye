@@ -164,12 +164,19 @@ function GodsEyes() -- basic information for the script
     end
 end
 
+local curLocation
+
 CreateThread(function() -- markers thread
     while true do
         local sleep = 2000
         for i, locations in pairs(GELocations) do
             local coords2 = GetEntityCoords(cache.ped)
-            local distance = GetDistanceBetweenCoords(coords2.x, coords2.y, coords2.z, locations.x, locations.y, locations.z, true)
+            local distance
+            if curLocation then
+                distance = GetDistanceBetweenCoords(coords2.x, coords2.y, coords2.z, curLocation.x, curLocation.y, curLocation.z, true)
+            else
+                distance = GetDistanceBetweenCoords(coords2.x, coords2.y, coords2.z, locations.x, locations.y, locations.z, true)
+            end
             if distance < 3 then -- draw the marker and allow the user to interact with God's Eye
                 sleep = 50
                 --DrawMarker(31, locations.x, locations.y, locations.z, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 1.0, 1.0, 0, 128, 0, 50, false, true, 2, false, nil, nil)
@@ -184,18 +191,21 @@ CreateThread(function() -- markers thread
                 })
                 if IsControlPressed(0, 153) then
                     GodsEyes()
+                    curLocation = vector3(locations.x, locations.y, locations.z)
                 end
             elseif distance > 3 then
                 local isOpen = lib.isTextUIOpen()
                 if isOpen then
                     lib.hideTextUI()
                 end
-            elseif distance > 10 and foundPlayer then -- remove the blip if person is not near the marker.
+            end
+            if distance > 10 and foundPlayer then -- remove the blip if person is not near the marker.
+                curLocation = nil
                 GodsEye(true)
                 foundPlayer = false
                 count = 0
                 count2 = 0
-            end
+            end 
         end
         Wait(sleep)
     end
