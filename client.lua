@@ -178,21 +178,19 @@ CreateThread(function() -- markers thread
                     icon = 'globe',
                     style = {
                         borderRadius = 1,
-                        backgroundColor = '#06402B',
+                        backgroundColor = '#06402Bw',
                         color = 'white'
                     }
                 })
                 if IsControlPressed(0, 153) then
                     GodsEyes()
                 end
-            end
-            if distance > 3 then
+            elseif distance > 3 then
                 local isOpen = lib.isTextUIOpen()
                 if isOpen then
                     lib.hideTextUI()
                 end
-            end
-            if distance > 10 and foundPlayer then -- remove the blip if person is not near the marker.
+            elseif distance > 10 and foundPlayer then -- remove the blip if person is not near the marker.
                 GodsEye(true)
                 foundPlayer = false
                 count = 0
