@@ -4,7 +4,7 @@ game 'gta5'
 
 author 'leocroatian'
 description "God's Eye"
-version '1.0.0'
+version '1.1.0'
 
 lua54 'yes'
 
