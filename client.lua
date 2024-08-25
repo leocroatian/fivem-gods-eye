@@ -14,18 +14,19 @@ AddEventHandler('GodsEye:SentCoords', function(cd, pd) -- server sided event whe
     ped = pd
 end)
 
+local function Notify(message, type, duration)
+    if not duration then
+        duration = 3000
+    end
+    lib.notify({title='God\'s Eye', description=message, type=type, position='center-right', duration=duration})
+end
+
 function GetInformation() -- getting the coordinates for the selected player
     TriggerServerEvent('GodsEye:GetCoords', targetId)
     Wait(500)
 
     if coords == nil then
-        lib.notify({
-            title = 'Player Not Found',
-            description = 'The specified player could not be found',
-            type = 'error',
-            position = 'center-right',
-            duration = 6000,
-        })
+        Notify('The specified player could not be found', 'error')
         foundPlayer = false
         count = 0
         count2 = 0
@@ -97,13 +98,7 @@ function GodsEyes() -- basic information for the script
     if foundPlayer then -- remove the blip for the player & leave the cooldown
         GodsEye(true)
         foundPlayer = false
-        lib.notify({
-            title = 'God\'s Eye Reset',
-            description = 'Removed the blip, you are still on cooldown for ' .. 300 - count .. ' seconds',
-            type = 'success',
-            position = 'center-right',
-            duration = 6000,
-        })
+        Notify('Reset you are still on cooldown for ' .. 300 - count .. ' seconds', 'success')
         return
     end
 
@@ -116,36 +111,18 @@ function GodsEyes() -- basic information for the script
     targetId = input[1]  -- Convert the target ID to a number
 
     if targetId == cache.serverId then -- check if the person is self.
-        lib.notify({
-            title = 'God\'s Eye',
-            description = 'You cannot track yourself.',
-            type = 'error',
-            position = 'center-right',
-            duration = 6000,
-        })
+        Notify('You cannot track yourself.', 'error', 6000)
         targetId = nil
         return
     end
 
     if count ~= 0 then
-        lib.notify({
-            title = 'Active Cooldown',
-            description = 'You are still on cooldown for ' .. 300 - count .. ' seconds',
-            type = 'warning',
-            position = 'center-right',
-            duration = 6000,
-        })
+        Notify('You are still on cooldown for ' .. 300 - count .. ' seconds', 'warning', 6000)
         return
     end
 
     if foundPlayer then
-        lib.notify({
-            title = 'Search In-Progress',
-            description = 'Player search already in-progress',
-            type = 'error',
-            position = 'center-right',
-            duration = 6000,
-        })
+        Notify('Player search already in-progress', 'warning', 3000)
         return
     end
 
@@ -154,13 +131,7 @@ function GodsEyes() -- basic information for the script
     Wait(100)
 
     if foundPlayer then
-        lib.notify({
-            title = 'Located Player',
-            description = 'We have successfully located player with ID: ' .. targetId .. ' God\'s Eye active for 5 minutes.',
-            type = 'success',
-            position = 'center-right',
-            duration = 6000,
-        })
+        Notify('Player #' .. targetId .. ' located', 'success', 6000)
     end
 end
 
