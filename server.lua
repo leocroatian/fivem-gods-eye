@@ -1,5 +1,9 @@
 RegisterNetEvent('GodsEye:GetCoords')
 AddEventHandler('GodsEye:GetCoords', function(serverId)
+    if not serverId then
+        TriggerClientEvent('GodsEye:SentCoords', source, nil, nil)
+        return
+    end
     local targetPed = GetPlayerPed(serverId)  -- Get the player's ped directly from their sersver ID
     if targetPed == 0 then
         TriggerClientEvent('GodsEye:SentCoords', source, nil, nil)
